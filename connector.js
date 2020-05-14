@@ -7,10 +7,11 @@ var hovercolor="rgb(213, 151, 151)"
 var currentPlayer = 1;
 var currentName = player1;
 var currentColor = player1Color;
-var count=1
+var count
 function returnColor(rowIndex,colIndex) {
   return $('tr').eq(rowIndex).find('button').eq(colIndex).css('background-color');
 }
+var tie=0
 
 
 $('h3').text(player1+": it is your turn, please pick a column to drop your blue chip.");
@@ -24,8 +25,10 @@ $('#board button').on('click',function() {
 
   // Drop the chip in that column at the bottomAvail Row
   console.log("buttonvailclicked before=" + bottomAvail)
+
   changeColor(bottomAvail, col, currentColor);
-  for(rowl=0;rowl<6;rowl++)
+  console.log("color changed")
+  for(rowl=1;rowl<=6;rowl++)
   {
     for(coll=0;coll<7;coll++)
     {
@@ -38,12 +41,14 @@ $('#board button').on('click',function() {
 
 
 
-if(bottomAvail>=0)
+
+if(bottomAvail>=1)
 {// If no win or tie, continue to next player
   currentPlayer = currentPlayer * -1;
-  if (horizontalWinCheck() || verticalWinCheck() || diagonalWinCheck()) {
+  if (horizontalWinCheck() || verticalWinCheck() || diagonalWinCheck()||drawCheck()) {
     gameEnd(currentName);
   }
+
   // Re-Check who the current Player is.
   if (currentPlayer === 1) {
     currentName = player1;
@@ -57,11 +62,11 @@ if(bottomAvail>=0)
 
 }
 if (bottomAvail == 0) {
-    bottomAvail = undefined
+bottomAvail=undefined
 } else {
     bottomAvail = bottomAvail - 1;
 }
-
+console.log("button changed"+bottomAvail)
 })
 
 $('#board button').hover(function(){
@@ -74,14 +79,15 @@ $('#board button').hover(function(){
 },function(){
   var col=$(this).closest("td").index()
   console.log("buttonvail hover after"+bottomAvail)
-  highlight(col,bgcolor,bottomAvail,bgcolor,"none")
+  if(bottomAvail!=0)
+    highlight(col, bgcolor, bottomAvail, bgcolor, "none")
 
 })
 
 function highlight(col,color,bottom,color2,animationtype)
 {
 var c=$('td');
-for(rowl=0;rowl<6;rowl++)
+for(rowl=1;rowl<7;rowl++)
   {
     for(coll=0;coll<7;coll++)
     {
@@ -91,17 +97,18 @@ for(rowl=0;rowl<6;rowl++)
       }
     }
   }
-for(i=0;i<bottom;i++)
+for(i=1;i<=bottom;i++)
 {
   $(c).eq(col).find('button').css("background-color",color);
   col=col+7;
 }
 $(c).eq(col).find('button').css("animation",animationtype)
+
 $(c).eq(col).find('button').css("background-color",color2);
 }
 
 function checkAvail(col,color){
-for(i=5;i>=0;i--)
+for(i=6;i>0;i--)
 {
   if(returnColor(i,col)==color)
   { console.log(i)
@@ -139,7 +146,7 @@ function colorMatchCheck(one,two,three,four){
 
 // Check for Horizontal Wins
 function horizontalWinCheck() {
-  for (var row = 0; row < 6; row++) {
+  for (var row = 1; row < 7; row++) {
     for (var col = 0; col < 4; col++) {
 
       if (colorMatchCheck(returnColor(row,col), returnColor(row,col+1) ,returnColor(row,col+2), returnColor(row,col+3))) {
@@ -157,8 +164,8 @@ function horizontalWinCheck() {
 function verticalWinCheck() {
 
   for (var col = 0; col < 7; col++) {
-    for (var row = 0; row < 3; row++) {
-      console.log(row+""+col+returnColor(row,col)+ returnColor(row+1,col) +returnColor(row+2,col)+ returnColor(row+3,col))
+    for (var row = 1; row < 4; row++) {
+      // console.log(row+""+col+returnColor(row,col)+ returnColor(row+1,col) +returnColor(row+2,col)+ returnColor(row+3,col))
       if (colorMatchCheck(returnColor(row,col), returnColor(row+1,col) ,returnColor(row+2,col), returnColor(row+3,col))) {
         console.log('vertical');
         reportWin(row,col);
@@ -173,7 +180,7 @@ function verticalWinCheck() {
 // Check for Diagonal Wins
 function diagonalWinCheck() {
   for (var col = 0; col < 5; col++) {
-    for (var row = 0; row < 7; row++) {
+    for (var row = 1; row < 8; row++) {
       if (colorMatchCheck(returnColor(row,col), returnColor(row+1,col+1) ,returnColor(row+2,col+2), returnColor(row+3,col+3))) {
         console.log('diagtop');
         reportWin(row,col);
@@ -189,20 +196,31 @@ function diagonalWinCheck() {
   }
 }
 function gameEnd(winningPlayer) {
-  for (var col = 0; col < 7; col++) {
-    for (var row = 0; row < 7; row++) {
+  if(tie==1)
+  {
       $('h3').fadeOut('2s');
       $('h2').fadeOut('2s');
 
       $('h1').fadeIn('5s');
-      $('h1').text(winningPlayer+" has won! CLICK THE BUTTON BELOW TO PLAY AGAIN!").css("fontSize", "50px")
+      $('h1').text("GAME IS TIED! CLICK THE BUTTON BELOW TO PLAY AGAIN!").css("fontSize", "50px")
 
+  }
+  else {
+    for (var col = 0; col < 7; col++) {
+      for (var row = 1; row < 7; row++) {
+        $('h3').fadeOut('2s');
+        $('h2').fadeOut('2s');
+
+        $('h1').fadeIn('5s');
+        $('h1').text(winningPlayer + " has won! CLICK THE BUTTON BELOW TO PLAY AGAIN!").css("fontSize", "50px")
+
+      }
     }
   }
   $('#board button').attr("disabled","true");
   $('#playAgain').removeAttr("hidden")
   $('#newGame').removeAttr("hidden")
-  for(row=0;row<6;row++)
+  for(row=1;row<7;row++)
   {
     for(col=0;col<7;col++)
     {
@@ -237,4 +255,25 @@ $('h2').fadeIn('fast');
 $('h1').text("WELCOME TO CONNECTING DOTS");
 $('#playAgain').attr("hidden","true");
 $('#newGame').attr("hidden","true");
+}
+
+function drawCheck(){
+  count=0
+   for(rowl=1;rowl<=6;rowl++)
+  {
+    for(coll=0;coll<7;coll++)
+    {
+      if($('tr').eq(rowl).find('button').eq(coll).css('background-color')==player1Color ||$('tr').eq(rowl).find('button').eq(coll).css('background-color')==player2Color)
+      {
+        count=count+1;
+
+      }
+    }
+  }
+   console.log(count+"=count")
+   if(count==41)
+  { window.tie=1
+    return true;
+
+  }
 }
