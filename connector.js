@@ -1,4 +1,8 @@
-var player1=prompt("Enter your name player one")
+player1
+bootbox.prompt("What is your name?", function(result){
+    /* your callback code */player1=result
+})
+
 var player2=prompt("Enter your name player two")
 var player1Color='rgba(122, 186, 255, 0.76)'
 var player2Color='rgba(132, 9, 9, 0.88)'
@@ -11,7 +15,10 @@ var count
 function returnColor(rowIndex,colIndex) {
   return $('tr').eq(rowIndex).find('button').eq(colIndex).css('background-color');
 }
-var tie=0
+tie=0
+bootbox.prompt("What is your name?", function(player1){
+    /* your callback code */
+})
 
 
 $('h3').text(player1+": it is your turn, please pick a column to drop your blue chip.");
@@ -24,10 +31,10 @@ $('#board button').on('click',function() {
 
 
   // Drop the chip in that column at the bottomAvail Row
-  console.log("buttonvailclicked before=" + bottomAvail)
+
 
   changeColor(bottomAvail, col, currentColor);
-  console.log("color changed")
+
   for(rowl=1;rowl<=6;rowl++)
   {
     for(coll=0;coll<7;coll++)
@@ -66,19 +73,19 @@ bottomAvail=undefined
 } else {
     bottomAvail = bottomAvail - 1;
 }
-console.log("button changed"+bottomAvail)
+
 })
 
 $('#board button').hover(function(){
   var col=$(this).closest("td").index();
 
   window.bottomAvail=checkAvail(col,bgcolor)
-  console.log("buttonvail hover before="+bottomAvail)
+
   highlight(col,hovercolor,bottomAvail,currentColor,"1.6s infinite beatHeart2");
 
 },function(){
   var col=$(this).closest("td").index()
-  console.log("buttonvail hover after"+bottomAvail)
+
   if(bottomAvail!=0)
     highlight(col, bgcolor, bottomAvail, bgcolor, "none")
 
@@ -111,7 +118,7 @@ function checkAvail(col,color){
 for(i=6;i>0;i--)
 {
   if(returnColor(i,col)==color)
-  { console.log(i)
+  {
     return i;
   }
 }
@@ -165,7 +172,6 @@ function verticalWinCheck() {
 
   for (var col = 0; col < 7; col++) {
     for (var row = 1; row < 4; row++) {
-      // console.log(row+""+col+returnColor(row,col)+ returnColor(row+1,col) +returnColor(row+2,col)+ returnColor(row+3,col))
       if (colorMatchCheck(returnColor(row,col), returnColor(row+1,col) ,returnColor(row+2,col), returnColor(row+3,col))) {
         console.log('vertical');
         reportWin(row,col);
@@ -196,7 +202,7 @@ function diagonalWinCheck() {
   }
 }
 function gameEnd(winningPlayer) {
-  if(tie==1)
+  if(tie==42)
   {
       $('h3').fadeOut('2s');
       $('h2').fadeOut('2s');
@@ -257,23 +263,8 @@ $('#playAgain').attr("hidden","true");
 $('#newGame').attr("hidden","true");
 }
 
-function drawCheck(){
-  count=0
-   for(rowl=1;rowl<=6;rowl++)
-  {
-    for(coll=0;coll<7;coll++)
-    {
-      if($('tr').eq(rowl).find('button').eq(coll).css('background-color')==player1Color ||$('tr').eq(rowl).find('button').eq(coll).css('background-color')==player2Color)
-      {
-        count=count+1;
-
-      }
-    }
-  }
-   console.log(count+"=count")
-   if(count==41)
-  { window.tie=1
-    return true;
-
-  }
+function drawCheck() {
+  tie = tie + 1
+  console.log(tie)
+  if(tie===42) return true
 }
