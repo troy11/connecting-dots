@@ -1,8 +1,4 @@
-player1
-bootbox.prompt("What is your name?", function(result){
-    /* your callback code */player1=result
-})
-
+var player1=prompt("Enter your name player two")
 var player2=prompt("Enter your name player two")
 var player1Color='rgba(122, 186, 255, 0.76)'
 var player2Color='rgba(132, 9, 9, 0.88)'
@@ -16,9 +12,6 @@ function returnColor(rowIndex,colIndex) {
   return $('tr').eq(rowIndex).find('button').eq(colIndex).css('background-color');
 }
 tie=0
-bootbox.prompt("What is your name?", function(player1){
-    /* your callback code */
-})
 
 
 $('h3').text(player1+": it is your turn, please pick a column to drop your blue chip.");
